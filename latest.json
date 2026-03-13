@@ -1,6 +1,6 @@
 {
   "version": "0.2.0",
-  "notes": "Primera versión",
+  "notes": "Segunda versión",
   "platforms": {
     "windows-x86_64": {
       "url": "https://github.com/desarrollogruppesolutions/actualizacion/releases/download/v0.2.0/frontend_0.2.0_x64_en-US.msi",
