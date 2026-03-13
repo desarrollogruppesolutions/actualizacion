@@ -3,8 +3,8 @@
   "notes": "Primera versión",
   "platforms": {
     "windows-x86_64": {
-      "url": "https://github.com/desarrollogruppesolutions/actualizacion/releases/download/v1.0.0/frontend_0.1.0_x64_en-US.msi",
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUNzFPNVVuaWZvc041dTA1ZEJBOWwyZlJWbzZGM3dUZ0NLcHVVOU1rM2NpUTBtKzA1a0w5c2tjZnJ2cENZUUFESHh1ck1DQWdtWU9iL2JiNG1La2ZnMERGSXl6Z2lnMmdVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczNDIzNzA5CWZpbGU6ZnJvbnRlbmRfMC4xLjBfeDY0X2VuLVVTLm1zaQpBNDNYeS9jOXE0WjlVK1REREtndEhkckVsblpRYTlOdnU5RnhpYklJai85clVJbVJycGlBTG80YWdSUk5lQzlPVldFZEtRVUJTMjFBL20yRTZmcjFBQT09Cg=="
+      "url": "https://github.com/desarrollogruppesolutions/actualizacion/releases/download/v0.2.0/frontend_0.2.0_x64_en-US.msi",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUNzFPNVVuaWZvc1BhM01yaS9kVkd3MXh2TGdMV3VyL2lrWVA3ajYxMEpyMnlXRzVoeXozQnRyNGt4c2oxRFNzZzdvRG1qdXJZcGh4MUZ2QnZPeEtURm9uK01Vam1WYVFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzczNDI2MTM4CWZpbGU6ZnJvbnRlbmRfMC4yLjBfeDY0X2VuLVVTLm1zaQpGOVd2NzdlaUU0TGIwVkcrM1ZSaHBod0xmWkM0bTZEU0RkSDk0cGl4bFk5QktBWjFyc0JRTEZkV1g3aXBRZXdxUjVNZ1dPcitzN09tYVRFbmMvd1FEZz09Cg=="
     }
   }
 }
