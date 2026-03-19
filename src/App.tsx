@@ -5,8 +5,8 @@ import CheckUpdates from "./CheckUpdates";
 
 const FloatingNotification = ({
   message = "¡Nueva notificación!",
-  icon = "success",
-  type = "success", // info, success, warning, error
+  icon = "🔔",
+  type = "error", // info, success, warning, error
   duration = 4000,
   
 }) => { 
@@ -27,7 +27,7 @@ const FloatingNotification = ({
 
     // Fase 4: Visible completa, luego se esconde
     timers.push(setTimeout(() => setPhase('exit'), duration));
- 
+
     // Fase 5: Se fue
     timers.push(setTimeout(() => {
       setPhase('gone');
