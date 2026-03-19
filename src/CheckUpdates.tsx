@@ -13,35 +13,37 @@ const CheckUpdates = () => {
     async function checkForUpdates() {
       try {
         const result = await check();
-        if (!result) return;
+
+        if (!result) {
+          // Temporal para debug: muestra notificacion aunque no haya update
+          setUpdate({ version: 'TEST - sin actualizacion' } as any);
+          setTimeout(() => setPhase('visible'), 100);
+          return;
+        }
 
         setUpdate(result);
-
-        // Descarga en segundo plano silenciosamente
         await result.download();
         setDownloaded(true);
-
-        // Anima la entrada
         setTimeout(() => setPhase('visible'), 100);
 
       } catch (err) {
-        console.error('Error al verificar actualizaciones:', err);
+        // Muestra el error visualmente en la notificacion
+        setUpdate({ version: `ERROR: ${err}` } as any);
+        setTimeout(() => setPhase('visible'), 100);
       }
     }
 
     checkForUpdates();
-  }, []);
+  }, []); // Solo corre una vez al montar
 
   // Instala al cerrar la app
   useEffect(() => {
     if (!downloaded || !update) return;
 
     const appWindow = getCurrentWindow();
-
     const unlisten = appWindow.onCloseRequested(async (event) => {
-      event.preventDefault(); // Evita que cierre de golpe
+      event.preventDefault();
       await update.install();
-      // Después de instalar, cierra de verdad
       await appWindow.destroy();
     });
 
@@ -70,20 +72,17 @@ const CheckUpdates = () => {
       <div className="relative flex items-center gap-3 px-5 py-3 rounded-2xl shadow-2xl
                       bg-[#1a1a2e] border border-white/10 text-white min-w-[320px]">
 
-        {/* Partículas decorativas */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
           <span className="absolute top-1 left-3 text-xs opacity-40 animate-pulse">✦</span>
           <span className="absolute top-2 right-6 text-xs opacity-30 animate-pulse delay-150">✧</span>
           <span className="absolute bottom-1 left-1/2 text-xs opacity-20 animate-pulse delay-300">•</span>
         </div>
 
-        {/* Ícono */}
         <div className="text-2xl animate-bounce">🔄</div>
 
-        {/* Texto */}
         <div className="flex flex-col">
           <span className="font-semibold text-sm">
-            Nueva versión {update.version} disponible
+            {update.version}
           </span>
           <span className="text-xs text-white/50">
             {downloaded
@@ -92,7 +91,6 @@ const CheckUpdates = () => {
           </span>
         </div>
 
-        {/* Indicador de descarga o check */}
         <div className="ml-auto">
           {downloaded
             ? <span className="text-green-400 text-lg">✅</span>
@@ -100,7 +98,6 @@ const CheckUpdates = () => {
           }
         </div>
 
-        {/* Botón cerrar */}
         <button
           onClick={handleDismiss}
           className="ml-2 text-white/30 hover:text-white/80 transition-colors text-sm"
@@ -108,7 +105,6 @@ const CheckUpdates = () => {
           ✕
         </button>
 
-        {/* Barra de progreso decorativa */}
         <div className="absolute bottom-0 left-0 right-0 h-[2px] rounded-b-2xl overflow-hidden">
           <div className={`h-full bg-gradient-to-r from-blue-500 to-purple-500
                           ${downloaded ? 'w-full' : 'w-1/3 animate-pulse'} 
