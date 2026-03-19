@@ -27,7 +27,7 @@ const FloatingNotification = ({
 
     // Fase 4: Visible completa, luego se esconde
     timers.push(setTimeout(() => setPhase('exit'), duration));
-
+ 
     // Fase 5: Se fue
     timers.push(setTimeout(() => {
       setPhase('gone');

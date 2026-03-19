@@ -20,7 +20,7 @@ const CheckUpdates = () => {
         setTimeout(() => setPhase('visible'), 100);
 
         let totalSize = 0;
-        let downloadedSize = 0;
+        let downloadedSize = 0; 
 
         await result.download((event) => {
           if (event.event === 'Started' && event.data.contentLength) {
