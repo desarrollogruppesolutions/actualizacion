@@ -34,9 +34,9 @@
   },
   "plugins": {
       "updater": {
-        "pubkey": "",
+        "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDc1ODAxNjJGOUYyNkE1RQpSV1JlYXZMNVlnRllCMXZ6dzg1V1J0OHRtbC9tcTM4U1R6MWhMK0tna3NCRC9pS2hCNGpVMERZUwo=",
         "endpoints": [
-          "https://placeholder.com/latest.json"
+          "https://github.com/desarrollogruppesolutions/actualizacion/releases/latest/download/latest.json"
         ],
         "windows": {
           "installMode": "passive"
