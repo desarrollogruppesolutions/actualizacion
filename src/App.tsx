@@ -9,7 +9,7 @@ const FloatingNotification = ({
   type = "info", // info, success, warning, error
   duration = 4000,
   
-}) => {
+}) => { 
   const [phase, setPhase] = useState('enter');
   // Fases: enter → float → reveal → visible → exit → gone
 
