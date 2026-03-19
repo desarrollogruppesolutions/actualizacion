@@ -113,7 +113,7 @@ const CheckUpdates = () => {
         </div>
       </div>
     </div>
-  );
+  ); 
 };
 
 export default CheckUpdates;

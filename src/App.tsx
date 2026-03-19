@@ -14,7 +14,7 @@ const FloatingNotification = ({
   // Fases: enter → float → reveal → visible → exit → gone
 
   useEffect(() => {
-    const timers: (number | undefined)[] = [];
+    const timers: (number | undefined)[] = []; 
 
     // Fase 1: Entrada con giro (0ms)
     timers.push(setTimeout(() => setPhase('float'), 600));
