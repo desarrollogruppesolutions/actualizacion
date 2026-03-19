@@ -22,9 +22,11 @@ const CheckUpdates = () => {
         }
 
         setUpdate(result);
-        await result.download();
+        await result.download((progress) => {
+          console.log('descargando', progress);
+        });
         setDownloaded(true);
-        setTimeout(() => setPhase('visible'), 100);
+        setTimeout(() => setPhase('visible'), 100)
 
       } catch (err) {
         // Muestra el error visualmente en la notificacion
@@ -43,14 +45,20 @@ const CheckUpdates = () => {
     const appWindow = getCurrentWindow();
     const unlisten = appWindow.onCloseRequested(async (event) => {
       event.preventDefault();
-      await update.install();
-      await appWindow.destroy();
+      try {
+        await update.install();
+        await appWindow.destroy();
+      } catch (err) {
+        // Si falla el install, cierra igual
+        await appWindow.destroy();
+      }
     });
 
     return () => {
       unlisten.then(fn => fn());
     };
   }, [downloaded, update]);
+
 
   const handleDismiss = () => {
     setPhase('exit');
