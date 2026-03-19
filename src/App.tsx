@@ -6,7 +6,7 @@ import CheckUpdates from "./CheckUpdates";
 const FloatingNotification = ({
   message = "¡Nueva notificación!",
   icon = "success",
-  type = "warning", // info, success, warning, error
+  type = "success", // info, success, warning, error
   duration = 4000,
   
 }) => { 
