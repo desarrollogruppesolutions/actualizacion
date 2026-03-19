@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "actualizacion",
-  "version": "0.7.1",
+  "version": "0.7.0",
   "identifier": "com.desar.actualizacion",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -34,16 +34,14 @@
     ]
   },
   "plugins": {
-    "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDc1ODAxNjJGOUYyNkE1RQpSV1JlYXZMNVlnRllCMXZ6dzg1V1J0OHRtbC9tcTM4U1R6MWhMK0tna3NCRC9pS2hCNGpVMERZUwo=",
-      "endpoints": [
-        "https://github.com/desarrollogruppesolutions/actualizacion/releases/latest/download/latest.json"
+      "updater": {
+        "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDc1ODAxNjJGOUYyNkE1RQpSV1JlYXZMNVlnRllCMXZ6dzg1V1J0OHRtbC9tcTM4U1R6MWhMK0tna3NCRC9pS2hCNGpVMERZUwo=",
+        "endpoints": [
+          "https://github.com/desarrollogruppesolutions/actualizacion/releases/latest/download/latest.json"
         ],
-      "windows": {
-        "nsis": {
-          "installMode": "quiet"
+        "windows": {
+          "installMode": "passive"
         }
       }
-    }
   }
 }
