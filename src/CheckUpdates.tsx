@@ -1,58 +1,45 @@
 import { useEffect, useState } from 'react';
-import { check } from '@tauri-apps/plugin-updater';
+import { check, Update } from '@tauri-apps/plugin-updater';
 import { relaunch } from '@tauri-apps/plugin-process';
 
 const CheckUpdates = () => {
-  const [ready, setReady] = useState(false);
+  const [update, setUpdate] = useState<Update | null>(null);
   const [installing, setInstalling] = useState(false);
 
-  useEffect(() => {
-    async function handleUpdates() {
-      try {
-        const update = await check();
-        if (!update) return;
+  // 🔍 Función central para revisar updates
+  const checkUpdate = async () => {
+    try {
+      const result = await check();
 
-        const storedVersion = localStorage.getItem('updateVersion');
-        const isReady = localStorage.getItem('updateReady') === 'true';
-
-        // 🟢 CASO 1: ya descargada ESTA versión → instalar
-        if (isReady && storedVersion === update.version) {
-          setInstalling(true);
-
-          await update.install();
-
-          // limpiar estado
-          localStorage.removeItem('updateReady');
-          localStorage.removeItem('updateVersion');
-
-          return;
-        }
-
-        // 🟡 CASO 2: hay nueva versión distinta → resetear estado
-        if (storedVersion && storedVersion !== update.version) {
-          localStorage.removeItem('updateReady');
-          localStorage.removeItem('updateVersion');
-        }
-
-        // 🔵 CASO 3: no descargada → descargar en silencio
-        if (!isReady) {
-          await update.download();
-
-          localStorage.setItem('updateReady', 'true');
-          localStorage.setItem('updateVersion', update.version);
-
-          setReady(true);
-        }
-
-      } catch (err) {
-        console.error('Updater error:', err);
+      // Evita re-render innecesario si ya hay update mostrada
+      if (result && (!update || result.version !== update.version)) {
+        setUpdate(result);
       }
+    } catch (err) {
+      console.error('Updater error:', err);
     }
+  };
 
-    handleUpdates();
+  useEffect(() => {
+    let interval: any;
+
+    // 🟢 Check al iniciar
+    checkUpdate();
+
+    // 🔁 Check cada 10 minutos
+    //interval = setInterval(checkUpdate, 10 * 60 * 1000);
+    interval = setInterval(checkUpdate, 60000);
+
+    // 🖥️ Check cuando el usuario regresa a la app
+    window.addEventListener('focus', checkUpdate);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', checkUpdate);
+    };
   }, []);
 
-  // 🔄 Instalando
+  // 🔄 Estado instalando
   if (installing) {
     return (
       <div style={styles.container}>
@@ -61,25 +48,46 @@ const CheckUpdates = () => {
     );
   }
 
-  // ✅ Update lista
-  if (!ready) return null;
+  // ❌ No hay update
+  if (!update) return null;
 
   return (
     <div style={styles.container}>
-      <span>✅ Actualización lista</span>
-      <button
-        style={styles.button}
-        onClick={async () => {
-          setInstalling(true);
-          await relaunch();
-        }}
-      >
-        Reiniciar ahora
-      </button>
+      <span>🚀 Nueva versión {update.version}</span>
+
+      <div style={{ display: 'flex', gap: 8 }}>
+        {/* 🔄 Instalar */}
+        <button
+          style={styles.primaryButton}
+          onClick={async () => {
+            try {
+              setInstalling(true);
+
+              await update.downloadAndInstall();
+
+              await relaunch();
+            } catch (err) {
+              console.error('Error al instalar:', err);
+              setInstalling(false);
+            }
+          }}
+        >
+          Actualizar
+        </button>
+
+        {/* ❌ Cerrar */}
+        <button
+          style={styles.closeButton}
+          onClick={() => setUpdate(null)}
+        >
+          ✖
+        </button>
+      </div>
     </div>
   );
 };
 
+// 🎨 Estilos PRO
 const styles = {
   container: {
     position: 'fixed' as const,
@@ -92,16 +100,27 @@ const styles = {
     fontSize: 13,
     display: 'flex',
     alignItems: 'center',
-    gap: 10,
+    justifyContent: 'space-between',
+    gap: 12,
+    minWidth: 250,
     boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
     border: '1px solid #ffffff15',
     zIndex: 9999
   },
-  button: {
+  primaryButton: {
     background: '#2563eb',
     border: 'none',
     color: '#fff',
     padding: '6px 10px',
+    borderRadius: 8,
+    cursor: 'pointer',
+    fontSize: 12
+  },
+  closeButton: {
+    background: 'transparent',
+    border: '1px solid #ffffff22',
+    color: '#fff',
+    padding: '6px 8px',
     borderRadius: 8,
     cursor: 'pointer',
     fontSize: 12
