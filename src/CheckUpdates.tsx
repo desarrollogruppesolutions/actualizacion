@@ -2,52 +2,110 @@ import { useEffect, useState } from 'react';
 import { check } from '@tauri-apps/plugin-updater';
 import { relaunch } from '@tauri-apps/plugin-process';
 
-
 const CheckUpdates = () => {
-  const [status, setStatus] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
+  const [installing, setInstalling] = useState(false);
 
   useEffect(() => {
-    async function checkForUpdates() {
+    async function handleUpdates() {
       try {
         const update = await check();
         if (!update) return;
 
-        setStatus(`Nueva versión ${update.version} encontrada. Descargando...`);
+        const storedVersion = localStorage.getItem('updateVersion');
+        const isReady = localStorage.getItem('updateReady') === 'true';
 
-        await update.downloadAndInstall((progress) => {
-          if (progress.event === 'Finished') {
-            setStatus('Instalando... la app se reiniciará.');
-          }
-        });
+        // 🟢 CASO 1: ya descargada ESTA versión → instalar
+        if (isReady && storedVersion === update.version) {
+          setInstalling(true);
 
-        await relaunch();
+          await update.install();
+
+          // limpiar estado
+          localStorage.removeItem('updateReady');
+          localStorage.removeItem('updateVersion');
+
+          return;
+        }
+
+        // 🟡 CASO 2: hay nueva versión distinta → resetear estado
+        if (storedVersion && storedVersion !== update.version) {
+          localStorage.removeItem('updateReady');
+          localStorage.removeItem('updateVersion');
+        }
+
+        // 🔵 CASO 3: no descargada → descargar en silencio
+        if (!isReady) {
+          await update.download();
+
+          localStorage.setItem('updateReady', 'true');
+          localStorage.setItem('updateVersion', update.version);
+
+          setReady(true);
+        }
+
       } catch (err) {
-        console.error('Error al verificar actualizaciones:', err);
+        console.error('Updater error:', err);
       }
     }
 
-    checkForUpdates();
+    handleUpdates();
   }, []);
 
-  if (!status) return null;
+  // 🔄 Instalando
+  if (installing) {
+    return (
+      <div style={styles.container}>
+        ⚙️ Instalando actualización...
+      </div>
+    );
+  }
+
+  // ✅ Update lista
+  if (!ready) return null;
 
   return (
-    <div style={{
-      position: 'fixed',
-      bottom: 16,
-      left: 16,
-      background: '#1a1a2e',
-      color: '#fff',
-      padding: '10px 18px',
-      borderRadius: 10,
-      fontSize: 13,
-      zIndex: 9999,
-      boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-      border: '1px solid #ffffff22'
-    }}>
-      🔄 {status}
+    <div style={styles.container}>
+      <span>✅ Actualización lista</span>
+      <button
+        style={styles.button}
+        onClick={async () => {
+          setInstalling(true);
+          await relaunch();
+        }}
+      >
+        Reiniciar ahora
+      </button>
     </div>
   );
+};
+
+const styles = {
+  container: {
+    position: 'fixed' as const,
+    bottom: 20,
+    right: 20,
+    background: '#111827',
+    color: '#fff',
+    padding: '12px 16px',
+    borderRadius: 12,
+    fontSize: 13,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+    border: '1px solid #ffffff15',
+    zIndex: 9999
+  },
+  button: {
+    background: '#2563eb',
+    border: 'none',
+    color: '#fff',
+    padding: '6px 10px',
+    borderRadius: 8,
+    cursor: 'pointer',
+    fontSize: 12
+  }
 };
 
 export default CheckUpdates;
